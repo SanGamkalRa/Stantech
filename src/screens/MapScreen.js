@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import MapView, {Marker, Polygon} from 'react-native-maps';
 import {View, PermissionsAndroid, Platform} from 'react-native';
-import Geolocation from 'react-native-geolocation-service';
+import Geolocation from '@react-native-community/geolocation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {AppContext} from '../context/AppContext';
 
@@ -26,6 +26,8 @@ const MapScreen = () => {
     Geolocation.getCurrentPosition(
       position => {
         const {latitude, longitude} = position.coords;
+        console.log("🚀 ~ getCurrentLocation ~ longitude:", longitude)
+        console.log("🚀 ~ getCurrentLocation ~ latitude:", latitude)
         setCurrentLocation({
           latitude,
           longitude,
@@ -78,9 +80,9 @@ const MapScreen = () => {
     <View style={{flex: 1}}>
       <MapView
         style={{flex: 1}}
-        region={currentLocation} 
-        showsUserLocation={true} 
-      >
+        region={currentLocation}
+        showsUserLocation={true}
+        zoomControlEnabled>
         {/* Clock-In Marker */}
         {clockInLocation && (
           <Marker
@@ -109,7 +111,7 @@ const MapScreen = () => {
             coordinates={polygonCoordinates}
             strokeWidth={2}
             strokeColor="hotpink"
-            fillColor="rgba(255, 105, 180, 0.3)" 
+            fillColor="rgba(255, 105, 180, 0.3)"
           />
         )}
       </MapView>

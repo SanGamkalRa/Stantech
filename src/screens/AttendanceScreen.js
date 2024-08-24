@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useContext} from 'react';
-import {View, StyleSheet, Alert} from 'react-native';
+import {View, StyleSheet, Alert, PermissionsAndroid} from 'react-native';
 import {
   Text,
   Button,
@@ -12,6 +12,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {AppContext} from '../context/AppContext';
 import moment from 'moment';
 import Geolocation from '@react-native-community/geolocation';
+import RNAndroidLocationEnabler, { promptForEnableLocationIfNeeded } from 'react-native-android-location-enabler';
 
 const AttendanceScreen = () => {
   const {state, dispatch} = useContext(AppContext);
@@ -24,6 +25,21 @@ const AttendanceScreen = () => {
     clockOutLocation: null,
     totalDuration: null,
   });
+
+  useEffect(() => {
+    const requestLocationPermission = async () => {
+      try {
+        const enableResult = await promptForEnableLocationIfNeeded();
+      console.log('enableResult', enableResult);
+        
+        // do some action after the gps has been activated by the user
+        
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    requestLocationPermission();
+}, [])
 
   useEffect(() => {
     const fetchAttendanceData = async () => {
@@ -44,6 +60,7 @@ const AttendanceScreen = () => {
     return new Promise((resolve, reject) => {
       Geolocation.getCurrentPosition(
         position => {
+          console.log("🚀 ~ returnnewPromise ~ position:", position)
           resolve({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
